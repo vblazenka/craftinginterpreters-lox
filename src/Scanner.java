@@ -84,7 +84,27 @@ public class Scanner {
                 if (match('/')) {
                     // a comment goes until the end of the line, so we consume characters until the end of the line
                     // comment is not a useful lexeme, so we don't add it to the token
-                    while (peek() != '\n' && !isAtEnd()) advance();
+                    while (peek() != '\n' && !isAtEnd()) {
+                        if (peek() == '\n') {
+                            line++;
+                        }
+
+                        advance();
+                    }
+                } else if (match('*')) {
+                    while (!isAtEnd()) {
+                        if (peek() == '\n') {
+                            line++;
+                        }
+
+                        advance();
+
+                        if (peek() == '*' && peekNext() == '/') {
+                            advance();
+                            advance();
+                            break;
+                        }
+                    }
                 } else {
                     addToken(TokenType.SLASH);
                 }
